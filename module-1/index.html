@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>DATA/APIs 1</title>
+</head>
+<body>
+  <img src="" id="rainbow" width="480">
+  <script>
+    console.log('Fetch an image');
+
+    catchRainbow()
+      .then(response => {
+        console.log('Done!'); 
+      }) 
+      .catch(error => {
+        console.log(new Error('Whooops!'));
+        console.error(error);
+      });
+
+    async function catchRainbow() {
+      const response = await fetch('https://cdn.shoplightspeed.com/shops/613246/files/14834740/800x1024x2/sunnylife-rainbow-shaped-towel.jpg');
+      const blob = await response.blob();
+      document.getElementById('rainbow').src = URL.createObjectURL(blob);
+    }
+
+    // fetch('https://cdn.shoplightspeed.com/shops/613246/files/14834740/800x1024x2/sunnylife-rainbow-shaped-towel.jpg')
+    //   .then(response => {
+    //     console.log(response);
+    //     return response.blob();
+    //   })
+    //   .then(response => {
+    //     console.log(response);
+    //     document.getElementById('rainbow').src = URL.createObjectURL(response);
+    //   })
+    //   .catch(error => {
+    //     console.log('Error!');
+    //     console.error(error);
+    //   })
+
+
+    // How to fetch multiple images [array]!
+    const fileImages = [
+      'assets/eadbb915-0c9e-446a-9999-cee8bf3966a9.jpeg',
+      'assets/1_0PrPEAt3CR8qnRzxbeDXAg.jpeg',
+      'assets/Pinky-and-The-Brain-1024x1024.png'
+    ];
+
+    async function catchImages(fileImages) {
+      for(let image of fileImages) {
+        const response = await fetch(image);
+        const blob = await response.blob();
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(blob);
+        img.width = '200';
+        img.height = '150';
+        document.body.append(img)
+      }
+    }
+
+    catchImages(fileImages)
+      .then(response => {
+        console.log('We did it!');
+      })
+      .catch(error => {
+        console.error(new Error('Error 404'));
+      })
+
+
+
+    // How to fetch a text
+    async function catchDescription() {
+      const response = await fetch('assets/description.txt');
+      return await response.text();
+    }
+
+    catchDescription()
+      .then(response => {
+        const paragraph = document.createElement('p');
+        paragraph.innerText = response;
+        document.body.append(paragraph);
+        console.log('Text Description!'); 
+      }) 
+      .catch(error => {
+        console.log(new Error('Whooops!'));
+        console.error(error);
+      });
+
+  </script>
+</body>
+</html>
