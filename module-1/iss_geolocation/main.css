@@ -1,0 +1,37 @@
+body, html {
+  font-family: 'Oswald', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  background: rgb(34,193,195);
+  background: linear-gradient(0deg, rgba(34,193,195,1) 0%, rgba(253,187,45,1) 100%);
+  margin: 0;
+  padding: 1em;
+}
+
+p {
+  font-family: 'Roboto', sans-serif;
+  font-size: 20px;
+}
+
+button {
+  background-color: #f3f3f3;
+  border-radius: 10px;
+  padding: 1em;
+}
+
+.page-width {
+  padding: 0 1em;
+}
+
+.stop-update {
+  display: block;
+  font-family: 'Roboto', sans-serif;
+  padding: 1em 0;
+}
+
+#issMap {
+  height: 180px;
+}

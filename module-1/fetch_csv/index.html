@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Fetch and Graph CSV</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Oswald&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./main.css">
+</head>
+<body>
+  <h3 class="title">Goddard Institute for Space Studies</h3>
+  <div class="page-width">
+    <h4 class="title-description">GISS Surface Temperature Analysis</h4>
+    <p class="paragraph">El Análisis de temperatura de superficie GISS (GISTEMP v4) es una estimación del cambio global de temperatura de superficie. Los gráficos y las tablas se actualizan a mediados de cada mes utilizando archivos de datos actuales de NOAA GHCN v4 (estaciones meteorológicas) y ERSST v5 (áreas oceánicas), combinados como se describe en nuestras publicaciones Hansen et al. (2010) y Lenssen et al. (2019) Estos archivos actualizados incorporan informes del mes anterior y también informes tardíos y correcciones de los meses anteriores.</p>
+    <canvas id="chart" width="800" height="300"></canvas>
+  </div>
+
+
+  <script>
+  chartIt();
+
+  async function chartIt(){
+    const data = await getData();
+    const ctx = document.getElementById('chart').getContext('2d');
+    const myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: data.xs,
+        datasets: [{
+          label: 'Temperatura combinada del aire de la superficie terrestre y del agua de la superficie del mar en C °',
+          data: data.ys,
+          fill: false,
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              callback: function(value, index, values) {
+                return value + '°';
+              }
+            }
+          }]
+        }
+      }
+    });
+  }
+
+
+  // Data from: https://data.giss.nasa.gov/gistemp/
+  async function getData() {
+    const xs = [];
+    const ys = [];
+    const response = await fetch('ZonAnn.Ts+dSST.csv');
+    const data = await response.text();
+
+    const table = data.split('\n').slice(1);
+    table.forEach(elt => {
+      const columns = elt.split(',')
+      const year = columns[0];
+      xs.push(year);
+      const temp = columns[1];
+      ys.push(parseFloat(temp) + 14);
+      console.log(year, parseFloat(temp) + 14);
+    });
+    return { xs, ys };
+  }
+
+  </script>
+  
+</body>
+</html>
